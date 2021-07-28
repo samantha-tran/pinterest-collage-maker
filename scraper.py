@@ -47,16 +47,18 @@ class Scraper:
     def parse(self):
         self.driver.get(self.boardURL)
         
-        images = wait(self.driver, 5).until(EC.presence_of_all_elements_located((By.XPATH, "//img[@alt!='']")))
+        images = wait(self.driver, 5).until(EC.presence_of_all_elements_located((By.XPATH, "//img[@alt!='' and @srcset!='']")))
+        
         previousImages = images[:]
 
         self._add_URLs(images)
         
         while True:
             self.driver.execute_script('arguments[0].scrollIntoView();', images[-1])
+            sleep(randint(3,5))
 
             try:
-                images = wait(self.driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//img[@alt!='']")))
+                images = wait(self.driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//img[@alt!='' and @srcset!='']")))
                 self._add_URLs(images)
 
                 if (images[-1].id == previousImages[-1].id):
