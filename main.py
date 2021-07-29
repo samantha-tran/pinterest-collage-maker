@@ -14,8 +14,9 @@ def main():
     imageURLs = scraper.get_image_urls()
 
     #create collage of images
-    collager = Collager(imageURLs)
+    collager = Collager(imageURLs, 1000, 1000, 200)
     collager.convert_to_images()
+    collager.resize_images()
 
     while 1:
         pass
