@@ -1,13 +1,11 @@
 from random import randint
 from time import sleep
-import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-from PIL import Image
 
 try:
     from test_details import EMAIL, PASSWORD
@@ -21,11 +19,10 @@ except Exception as e:
 #   to test if it's working, use the storedImage.show() method
 # collaging algorithm: credit to 'http://delimitry.blogspot.com/2014/07/picture-collage-maker-using-python.html'
 
-#python3 
 class Scraper:
-    def __init__(self):
+    def __init__(self, boardURL):
         self.driver = webdriver.Chrome()
-        self.boardURL = sys.argv[1]
+        self.boardURL = boardURL
         self.imageURLs = {}
 
     def log_in(self):
@@ -64,7 +61,9 @@ class Scraper:
                 if (images[-1].id == previousImages[-1].id):
                     print("Reached the end of the board!")
                     raise TimeoutException
+
                 previousImages = images[:]
+
             except TimeoutException:
                 break
         
@@ -72,20 +71,13 @@ class Scraper:
             print(self.imageURLs[key])
         print(len(self.imageURLs))
 
+    def get_image_urls(self):
+        imageURLs = []
+        for key in self.imageURLs:
+            imageURLs.append(self.imageURLs[key])
+        return imageURLs
+
     def _add_URLs(self, images):
         for image in images:
             if (image.id not in self.imageURLs):
                 self.imageURLs[image.id] = image.get_attribute("src")
-
-def main():
-    if (len(sys.argv) != 2):
-        print("invalid usage: python3 scraper.py [board url]")
-        return 100
-    scraper = Scraper()
-    scraper.log_in()
-    scraper.parse()
-    while 1:
-        pass
-
-if __name__ == "__main__":
-    main()
