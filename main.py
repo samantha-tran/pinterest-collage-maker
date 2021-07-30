@@ -17,6 +17,9 @@ def main():
     collager = Collager(imageURLs, 1000, 1000, 200)
     collager.convert_to_images()
     collager.resize_images()
+    
+    arrangement = collager.arrange_collage()
+    collager.create_collage(arrangement)
 
     while 1:
         pass
