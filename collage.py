@@ -36,13 +36,13 @@ class Collager:
         currentWidth = 0
 
         for imageURL in self.imageSizes:
-            currentWidth += self.imageSizes[imageURL][0] + MARGIN_SIZE
-            row.append(imageURL)
-
             if ((currentWidth >= self.maxWidth)):
                 collageRows.append((float(currentWidth) / float(self.maxWidth), row[:]))
                 row = []
                 currentWidth = 0
+            
+            currentWidth += self.imageSizes[imageURL][0] + MARGIN_SIZE
+            row.append(imageURL)
         
         #add last line
         collageRows.append((float(currentWidth) / float(self.maxWidth), row[:]))

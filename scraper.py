@@ -66,11 +66,7 @@ class Scraper:
 
             except TimeoutException:
                 break
-        
-        for key in self.imageURLs:
-            print(self.imageURLs[key])
-        print(len(self.imageURLs))
-
+            
     def get_image_urls(self):
         imageURLs = []
         for key in self.imageURLs:
