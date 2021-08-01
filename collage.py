@@ -10,34 +10,34 @@ MARGIN_SIZE = 2
 class Collager:
     def __init__(self, imageURLs, maxCollageWidth, initialImageHeight):
         self.imageURLs = imageURLs
-        self.images = []
+        self.imageSizes = {}
         self.maxWidth = maxCollageWidth
         self.initialImageHeight = initialImageHeight
 
     def convert_to_images(self):
         for imageURL in self.imageURLs:
             imageName, header = urllib.request.urlretrieve(imageURL)
-            image = Image.open(imageName)
-            self.images.append(image)
+            with Image.open(imageName) as image:
+                self.imageSizes[imageURL] = [image.size[0], image.size[1]]
 
     def resize_images(self):
-        for i in range(0, len(self.images)):
-            image = self.images[i]
-            heightRatio = (self.initialImageHeight / float(image.size[1]))
-            width = int((float(image.size[0]) * float(heightRatio)))
-            self.images[i] = image.resize((width, self.initialImageHeight), Image.LANCZOS)
+        for imageURL in self.imageSizes:
+
+            heightRatio = (self.initialImageHeight / float(self.imageSizes[imageURL][1]))
+
+            width = int((float(self.imageSizes[imageURL][0]) * float(heightRatio)))
+
+            self.imageSizes[imageURL] = [width, self.initialImageHeight]
 
     def arrange_collage(self):
 
         row = [] #images that make up a row
         collageRows = [] #((float)resizing coefficient, row)
         currentWidth = 0
-        images = self.images[:]
 
-        while images:
-            image = images.pop()
-            currentWidth += image.size[0] + MARGIN_SIZE
-            row.append(image)
+        for imageURL in self.imageSizes:
+            currentWidth += self.imageSizes[imageURL][0] + MARGIN_SIZE
+            row.append(imageURL)
 
             if ((currentWidth >= self.maxWidth)):
                 collageRows.append((float(currentWidth) / float(self.maxWidth), row[:]))
@@ -51,8 +51,8 @@ class Collager:
 
     def create_collage(self, collageRows):
 
+        #create collage base
         height = self._get_collage_height(collageRows)
-
         collageImage = Image.new('RGB', (self.maxWidth, height), (255, 255, 255))
 
         y = 0 #offset of image on the y-axis
@@ -61,17 +61,20 @@ class Collager:
 
             x = 0 #offset of image on the x-axis
 
-            for image in imageRow:
+            for imageURL in imageRow:
 
-                ratio = (self.initialImageHeight / coefficient) / image.size[1]
+                imageName, header = imageName, header = urllib.request.urlretrieve(imageURL)
+                image = Image.open(imageName)
 
+                dimensions = self.imageSizes[imageURL]
+
+                ratio = (self.initialImageHeight / coefficient) / dimensions[1]
                 if (ratio > 1):
                     #enlarge image
-                    image = image.resize((int(image.size[0] * ratio), int(image.size[1] * ratio)), Image.ANTIALIAS)
-                elif (coefficient < 1):
+                    image = image.resize((int(dimensions[0] * ratio), int(dimensions[1] * ratio)), Image.ANTIALIAS)
+                else:
                     #minimise image
-                    image = image.thumbnail((int(self.maxWidth / coefficient), int(self.initialImageHeight / coefficient)), Image.ANTIALIAS)
-                
+                    image.thumbnail((int(self.maxWidth / coefficient), int(self.initialImageHeight / coefficient)), Image.ANTIALIAS)
                 collageImage.paste(image, (int(x), int(y)))
 
                 x += image.size[0] + MARGIN_SIZE
