@@ -31,13 +31,14 @@ class Collager:
 
     def arrange_collage(self):
 
+        print("Creating your collage!")
         row = [] #images that make up a row
         collageRows = [] #((float)resizing coefficient, row)
         currentWidth = 0
 
         for imageURL in self.imageSizes:
             if ((currentWidth >= self.maxWidth)):
-                collageRows.append((float(currentWidth) / float(self.maxWidth), row[:]))
+                collageRows.append((float(self.maxWidth) / float(currentWidth), row[:]))
                 row = []
                 currentWidth = 0
             
@@ -45,7 +46,7 @@ class Collager:
             row.append(imageURL)
         
         #add last line
-        collageRows.append((float(currentWidth) / float(self.maxWidth), row[:]))
+        collageRows.append((1, row[:]))
         
         return collageRows[:]
 
@@ -63,29 +64,22 @@ class Collager:
 
             for imageURL in imageRow:
 
+                dimensions = self.imageSizes[imageURL]
                 imageName, header = imageName, header = urllib.request.urlretrieve(imageURL)
                 image = Image.open(imageName)
 
-                dimensions = self.imageSizes[imageURL]
-
-                ratio = (self.initialImageHeight / coefficient) / dimensions[1]
-                if (ratio > 1):
-                    #enlarge image
-                    image = image.resize((int(dimensions[0] * ratio), int(dimensions[1] * ratio)), Image.ANTIALIAS)
-                else:
-                    #minimise image
-                    image.thumbnail((int(self.maxWidth / coefficient), int(self.initialImageHeight / coefficient)), Image.ANTIALIAS)
+                ratio = float(self.initialImageHeight * coefficient) / float(dimensions[1])
+                image = image.resize((int(dimensions[0] * ratio), int(dimensions[1] * ratio)), Image.ANTIALIAS)
                 collageImage.paste(image, (int(x), int(y)))
-
                 x += image.size[0] + MARGIN_SIZE
 
-            y += int(self.initialImageHeight / coefficient) + MARGIN_SIZE
+            y += int(self.initialImageHeight * coefficient) + MARGIN_SIZE
 
         collageImage.show()
 
     def _get_collage_height(self, collageRows):
         height = 0
         for (coefficient, imageRow) in collageRows:
-            height += int(self.initialImageHeight / coefficient) + MARGIN_SIZE
+            height += int(self.initialImageHeight * coefficient) + MARGIN_SIZE
         return height
 
