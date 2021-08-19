@@ -77,6 +77,7 @@ class Collager:
 
         print("Collage is done!")
         collageImage.show()
+        collageImage.save("collage.png")
 
     def _get_collage_height(self, collageRows):
         height = 0

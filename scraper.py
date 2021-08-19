@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 try:
-    from details import EMAIL, PASSWORD
+    from test_details import EMAIL, PASSWORD
 except Exception as e:
     print(e)
 
