@@ -131,3 +131,5 @@ dmypy.json
 # Project files
 test_details.py
 chromedriver.exe
+
+README.md
