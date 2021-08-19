@@ -16,5 +16,7 @@
 
 python3 main.py https://www.pinterest.com.au/ohrekii/cute-dogs/ 900 200
 
-The output of the program is:
-![example image of collage](https://github.com/samantha-tran/pinterest-collage-maker/blob/main/collage.png?raw=true)
+The output of the program is (scaled down in size):
+
+
+<img src="https://github.com/samantha-tran/pinterest-collage-maker/blob/main/collage.png?raw=true" width="500">
