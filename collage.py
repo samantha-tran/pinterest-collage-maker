@@ -1,8 +1,6 @@
 from PIL import Image
 import urllib.request
 
-#use Image.open() method to open image
-#   to test if it's working, use the storedImage.show() method
 # collaging algorithm: credit to 'http://delimitry.blogspot.com/2014/07/picture-collage-maker-using-python.html'
 
 MARGIN_SIZE = 2
@@ -15,6 +13,7 @@ class Collager:
         self.initialImageHeight = initialImageHeight
 
     def convert_to_images(self):
+        print("fetching images")
         for imageURL in self.imageURLs:
             imageName, header = urllib.request.urlretrieve(imageURL)
             with Image.open(imageName) as image:
@@ -37,6 +36,7 @@ class Collager:
         currentWidth = 0
 
         for imageURL in self.imageSizes:
+            #start new row if over max collage width
             if ((currentWidth >= self.maxWidth)):
                 collageRows.append((float(self.maxWidth) / float(currentWidth), row[:]))
                 row = []
@@ -75,6 +75,7 @@ class Collager:
 
             y += int(self.initialImageHeight * coefficient) + MARGIN_SIZE
 
+        print("Collage is done!")
         collageImage.show()
 
     def _get_collage_height(self, collageRows):

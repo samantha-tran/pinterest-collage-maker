@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
 try:
-    from test_details import EMAIL, PASSWORD
+    from details import EMAIL, PASSWORD
 except Exception as e:
     print(e)
 
@@ -52,10 +52,11 @@ class Scraper:
         
         while True:
             self.driver.execute_script('arguments[0].scrollIntoView();', images[-1])
+            
             sleep(randint(3,5))
 
             try:
-                images = wait(self.driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//img[@alt!='' and @srcset!='']")))
+                images = wait(self.driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//img[@alt!='']")))
                 self._add_URLs(images)
 
                 if (images[-1].id == previousImages[-1].id):
@@ -68,10 +69,7 @@ class Scraper:
                 break
             
     def get_image_urls(self):
-        imageURLs = []
-        for key in self.imageURLs:
-            imageURLs.append(self.imageURLs[key])
-        return imageURLs
+        return list(self.imageURLs.values())
 
     def _add_URLs(self, images):
         for image in images:
