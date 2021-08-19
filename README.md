@@ -10,6 +10,7 @@
 ### Command Line Arguments:
 
      python3 main.py [image board URL] [collage width in px] [maximum image height in px]
+<<<<<<< HEAD
      
 ### Example:
 
