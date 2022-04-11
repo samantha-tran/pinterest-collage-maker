@@ -1,6 +1,6 @@
   
 # Pinterest Log In Details 
 
-EMAIL = 'email@example.com'
+EMAIL = 'stran322001@gmail.com'
 
-PASSWORD = 'password'
+PASSWORD = 'p@ssw0rd88'
