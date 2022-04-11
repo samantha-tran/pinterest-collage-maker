@@ -21,7 +21,7 @@ except Exception as e:
 
 class Scraper:
     def __init__(self, boardURL):
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Firefox()
         self.boardURL = boardURL
         self.imageURLs = {}
 
